@@ -251,7 +251,7 @@ Reading     { id, userId?, 输入{历法, 年,月,日,时辰}, 公历date, benmi
    lunar-javascript 换算）、不臆造、≥3 样本交叉校验」——本 PR 已改，待你 review 时确认（改铁律须你明确点头）。
 
 **还需你定（小项，不阻塞开工）**
-- a. Functions 背后的 **存储** 选型：**Supabase Postgres** 还是 **Vercel Postgres / KV**？（免验证直登后不再需要托管认证的邮件通道，选型重点从「auth」回到「存储 + 会话」；建议 Supabase：一站省事，Functions 里调它的 SDK）
+- ~~a. 存储选型~~ **已定（2026-07-20）：Supabase Postgres**。后端用 service_role key 经 `@supabase/supabase-js` 读写 `users`/`readings` 表（schema 见 `backend/db/schema.sql`）；env 未配时回落内存 mock。表结构 / 端点见 API_CONTRACT §2/§3。
 - b. 时辰辅助板块解读**哪个维度**：时辰对性格的微调？还是时辰宜忌？（**现按「性格微调」实现**，见 `readings.ts` TIME_HELP，待最终确认）
 - c. 生图用**哪个模型**、什么统一画风（写死一句 style prompt 好让 28 张一致）？允许商用的授权确认。
 - d. **闰月本命宿处理**：闰 X 月按「X 月」的望宿算（现行）还是另设规则？（现暂按同名本月，待确认）

@@ -20,6 +20,8 @@ export function Result() {
   const [resp, setResp] = useState<ComputeResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveErr, setSaveErr] = useState<string | null>(null);
 
   useEffect(() => {
     if (!input) return;
@@ -66,19 +68,26 @@ export function Result() {
   const entry = getReading(resp.benming.xiu);
   const timeHelpText = resp.timeZhi ? entry?.timeHelp?.[resp.timeZhi] : undefined;
 
-  function handleSave() {
+  async function handleSave() {
     const user = authAdapter.currentUser();
     if (!user) {
       navigate("/login", { state: { redirect: "/result", input } });
       return;
     }
-    readingStore.save({
-      input: resp!.input,
-      solarDate: resp!.solarDate,
-      benming: resp!.benming,
-      userId: user.id,
-    });
-    setSaved(true);
+    setSaving(true);
+    setSaveErr(null);
+    try {
+      await readingStore.save({
+        input: resp!.input,
+        solarDate: resp!.solarDate,
+        benming: resp!.benming,
+      });
+      setSaved(true);
+    } catch (e) {
+      setSaveErr(e instanceof ApiClientError ? e.message : "保存失败，请稍后重试");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -110,11 +119,12 @@ export function Result() {
       <ResultCard resp={resp} />
 
       <div className="result__actions">
-        <button className="cta" onClick={handleSave} disabled={saved}>
-          {saved ? "已保存" : "保存这条测算"}
+        <button className="cta" onClick={handleSave} disabled={saved || saving}>
+          {saved ? "已保存" : saving ? "保存中…" : "保存这条测算"}
         </button>
         <button className="btn-ghost" onClick={() => navigate("/")}>再测一个</button>
       </div>
+      {saveErr && <p className="form-err">{saveErr}</p>}
     </div>
   );
 }

@@ -6,15 +6,20 @@ import { authAdapter } from "../lib/authAdapter";
 export function AuthForm({ onLoggedIn }: { onLoggedIn?: (u: User) => void }) {
   const [email, setEmail] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
+    setBusy(true);
     try {
-      const user = authAdapter.login(email);
+      const user = await authAdapter.login(email);
       setErr(null);
       onLoggedIn?.(user);
     } catch (x) {
       setErr((x as Error).message);
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -34,7 +39,9 @@ export function AuthForm({ onLoggedIn }: { onLoggedIn?: (u: User) => void }) {
         填邮箱即登录 / 建号，无需验证码。邮箱仅作软标识，可随时删除记录与账号（隐私说明见 About）。
       </p>
       {err && <p className="form-err">{err}</p>}
-      <button className="cta" type="submit">登录 / 注册</button>
+      <button className="cta" type="submit" disabled={busy}>
+        {busy ? "登录中…" : "登录 / 注册"}
+      </button>
     </form>
   );
 }
