@@ -89,6 +89,8 @@ PRD.md · CLAUDE.md · README.md · package.json · vite.config.ts
 - **你不背命令**：git、CI、部署都用「对 Agent 说人话 → Agent 执行 → 你 review + 验证」的方式，不手敲/手写 YAML。
 - 代码、`PRD.md`、`CLAUDE.md`、`tokens.css` 放**同一个 GitHub repo**。
 - push 前四查：密钥没进 git / README 能启动 / 三份 SoT 与代码同 repo / 初始 commit 能 build。
+- **开 PR 必须套用 `.github/pull_request_template.md`**：Summary / Type / Changes / Design Note / Checklist / Evidence 逐项填齐（Checklist 按实际勾选，不适用项标注原因）；别用自定义正文绕过模板。
+- **不自合并**：改动一律走 PR，等 Rick review 后由他合并；除非 Rick 明确说「可以合」，否则不 merge（合并 = 触发部署，见铁律「不碰部署除非授权」）。
 - CI 最小即可（install → typecheck → build）；用「红灯实验」确认它真能拦坏代码。
 - 部署：GitHub Pages + Vercel（Vercel 用官方 Git 集成出 Preview/Production）。
 

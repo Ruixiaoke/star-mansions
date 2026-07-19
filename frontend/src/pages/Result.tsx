@@ -103,7 +103,7 @@ export function Result() {
             )}
 
         {timeHelpText && (
-          <AnalysisSection label={`时辰辅助 · ${resp.timeZhi}时`} body={timeHelpText} placeholder />
+          <AnalysisSection label={`时辰辅助 · ${resp.timeZhi}时`} body={timeHelpText} />
         )}
       </div>
 
