@@ -4,7 +4,7 @@
 
 ## Related Issue
 
-<!-- Link the GitHub Issue: Fixes #123 or Closes #123 -->
+<!-- Link the GitHub Issue: Fixes #123 / Closes #123，没有就写 N/A -->
 
 ## Type
 
@@ -13,7 +13,7 @@
 - [ ] `refactor` — Code restructuring (no behaviour change)
 - [ ] `docs` — Documentation only
 - [ ] `test` — New or updated tests
-- [ ] `infra` — Infrastructure / DevOps
+- [ ] `infra` — Infrastructure / DevOps / CI
 - [ ] `chore` — Maintenance
 
 ## Changes
@@ -24,25 +24,25 @@
 
 ## Design Note
 
-<!-- For non-trivial changes, link to the design note in docs/design-notes/ or summarise: -->
-<!-- - Problem it solves -->
-<!-- - Services affected -->
-<!-- - Schema / API changes -->
-<!-- - Risks -->
-<!-- - Test plan -->
+<!-- 非平凡改动请说明： -->
+<!-- - 解决的问题 -->
+<!-- - 影响范围（frontend / backend / 两者） -->
+<!-- - 契约 / API 改动（同步 docs/API_CONTRACT.md 与前后端 types/contract.ts） -->
+<!-- - 风险 -->
+<!-- - 测试计划 -->
 
 ## Checklist
 
-- [ ] All CI gates green — see [`docs/TESTING.md#ci-gates`](../docs/TESTING.md#ci-gates) for what each check protects
-- [ ] Tests pass: `pytest tests/ -v`
-- [ ] Linter clean: `ruff check backend/ scheduler/`
-- [ ] Types check: `mypy backend/ scheduler/`
-- [ ] Documentation updated (if applicable)
-- [ ] No hardcoded secrets
-- [ ] Bridge contract unchanged (or `RAY-MIGRATE-XXX` tag added)
-- [ ] Tested locally with `docker compose up`
+- [ ] CI 全绿（`.github/workflows/ci.yml`：`npm ci` → `npm run typecheck` → `npm run build`）
+- [ ] 类型检查通过：`npm run typecheck`（backend + frontend `tsc --noEmit`）
+- [ ] 构建通过：`npm run build`（backend `tsc` + frontend `vite build`）
+- [ ] 测试通过：`npm test`（后端 Vitest）—— 若涉及测算 / 后端逻辑
+- [ ] 无硬编码密钥；`.env` 未入库（仅 `.env.example`）
+- [ ] 前端只走 `tokens.css` 变量，无硬编码 hex / px —— 若改样式（CLAUDE §4）
+- [ ] 结果页 / About 免责声明仍在 —— 若改相关页（CLAUDE §0-1）
+- [ ] 前后端契约变更已同步 `docs/API_CONTRACT.md` 与两侧类型 —— 若改接口
+- [ ] 文档已更新（PRD / docs，若适用）
 
 ## Screenshots / Evidence
 
-<!-- If UI changes, paste before/after screenshots. -->
-<!-- If API changes, paste curl or httpie output. -->
+<!-- UI 改动贴前后截图；API 改动贴 curl / httpie 输出。 -->

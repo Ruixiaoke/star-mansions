@@ -1,7 +1,11 @@
 name: CI
 
-# push 和 PR 都跑；任一 step 失败 → 该 commit / PR 标红
-on: [push, pull_request]
+# 去重：push 只在 main 触发（含 merge）；分支改动经 PR 的 pull_request 事件触发。
+# 这样一个 PR 只跑一趟，直推 main 也跑。任一 step 失败 → 该 commit / PR 标红。
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 # 最小权限：CI 只读代码
 permissions:
