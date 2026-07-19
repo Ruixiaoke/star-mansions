@@ -44,6 +44,11 @@ export interface User {
   createdAt: string;
 }
 
+export interface AuthResponse {
+  user: User;
+  token: string;
+}
+
 export interface Reading {
   id: string;
   userId?: string;

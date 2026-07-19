@@ -1,47 +1,28 @@
 /**
  * readingStore —— 测算记录存取接口（PRD §8/§9）。
- * scaffold 占位：本地 localStorage mock。真后端阶段换成调用 /api/history（接口不变）。
- * 隐私红线 §0-3：记录可删除。
+ * 调后端 /api/history（Supabase 持久化，跨设备）；作用域由 authAdapter 的软会话 token 决定。
+ * 隐私红线 §0-3：记录可删除（remove）。
  */
 import type { BirthInput, Benming, Reading } from "../types/contract";
-
-const KEY = "sm.readings";
-
-function readAll(): Reading[] {
-  const raw = localStorage.getItem(KEY);
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw) as Reading[];
-  } catch {
-    return [];
-  }
-}
-
-function writeAll(list: Reading[]): void {
-  localStorage.setItem(KEY, JSON.stringify(list));
-}
+import { apiGet, apiPost, apiDelete } from "./api";
+import { authAdapter } from "./authAdapter";
 
 export const readingStore = {
-  save(entry: { input: BirthInput; solarDate: string; benming: Benming; userId?: string }): Reading {
-    const list = readAll();
-    const reading: Reading = {
-      id: `r_${Date.now()}_${list.length}`,
-      input: entry.input,
-      solarDate: entry.solarDate,
-      benming: entry.benming,
-      userId: entry.userId,
-      createdAt: new Date().toISOString(),
-    };
-    writeAll([reading, ...list]);
+  async save(entry: { input: BirthInput; solarDate: string; benming: Benming }): Promise<Reading> {
+    const { reading } = await apiPost<{ reading: Reading }>(
+      "/api/history",
+      { input: entry.input, solarDate: entry.solarDate, benming: entry.benming },
+      authAdapter.token(),
+    );
     return reading;
   },
 
-  list(userId?: string): Reading[] {
-    const all = readAll();
-    return userId ? all.filter((r) => r.userId === userId) : all;
+  async list(): Promise<Reading[]> {
+    const { readings } = await apiGet<{ readings: Reading[] }>("/api/history", authAdapter.token());
+    return readings;
   },
 
-  remove(id: string): void {
-    writeAll(readAll().filter((r) => r.id !== id));
+  async remove(id: string): Promise<void> {
+    await apiDelete<{ ok: true }>(`/api/history?id=${encodeURIComponent(id)}`, authAdapter.token());
   },
 };

@@ -139,6 +139,8 @@ PRD.md · CLAUDE.md · README.md · package.json · vite.config.ts
 
 6. **地址不硬编码。** GitHub 仓库变量 `VITE_API_BASE` = 后端生产域名，Pages 构建时注入；密钥 / URL 不进代码（§0-3）。Pages 部署 workflow 里加 guard：变量为空则直接失败，避免线上前端静默打 localhost。
 
+7. **Supabase 存储（PRD §15-a）。** 后端在 Vercel 项目 env 配 `SUPABASE_URL` + `SUPABASE_SECRET_KEY`（service_role/secret，服务端专用、绝不下发前端；密钥不进 git，见 §0-3）。**上线顺序**：先在 Supabase SQL Editor 跑 `backend/db/schema.sql` 建表，**再**配 Vercel env——顺序反了（env 有值但表未建）会让 `/api/auth`、`/api/history` 500。未配 env 时后端自动回落内存 mock（不崩，但不持久化）。密钥若曾泄露（如贴进聊天）→ Supabase 后台轮换后更新 env。
+
 ---
 
 *本文件随项目演进更新；改铁律（§0）需 Rick 明确确认。*

@@ -3,7 +3,7 @@
 > 唯一契约 SoT。`frontend/src/types/contract.ts` 与 `backend/src/types/contract.ts` 都对齐本文件。
 > Base URL：前端读 `VITE_API_BASE`（本地 `http://localhost:3000`，生产 = Vercel 域名）。
 > 所有请求/响应 `Content-Type: application/json`。后端对 `ALLOWED_ORIGIN` 开 CORS（含预检 `OPTIONS`）。
-> 状态：`/api/compute` = 真实；`/api/auth`、`/api/history` = 占位（scaffold 返回 mock）。
+> 状态：`/api/compute`、`/api/auth`、`/api/history` 均已接真实存储（Supabase，PRD §15-a）；未配置 Supabase env 时 auth/history 回落内存 mock。
 
 ---
 
@@ -81,9 +81,10 @@ interface ComputeResponse {
 
 ---
 
-## 2. `POST /api/auth` — 邮箱直登（占位）
+## 2. `POST /api/auth` — 邮箱直登（Supabase）
 
-只填邮箱即登录/建号（PRD §8，upsert）。**scaffold 返回 mock，不接真存储**；前端 `authAdapter` 亦可先走 localStorage。
+只填邮箱即登录/建号（PRD §8，对 `users` 表 upsert）。返回 `{ user, token }`，`token = user.id`（免验证直登的软会话）。
+**存储 = Supabase（PRD §15-a）**；未配置 `SUPABASE_URL/SUPABASE_SECRET_KEY` 时后端回落内存 mock（本地/单测）。
 
 **Request Body**
 ```json
@@ -107,9 +108,9 @@ interface AuthResponse {
 
 ---
 
-## 3. `/api/history` — 测算记录（占位）
+## 3. `/api/history` — 测算记录（Supabase）
 
-登录后保存 / 回看 `Reading`。**scaffold 用 mock / localStorage**。需 `Authorization: Bearer <token>`（占位阶段可忽略校验）。
+登录后保存 / 回看 / 删除 `Reading`（存 Supabase `readings` 表）。**需 `Authorization: Bearer <token>`**（token = 登录返回值，作用域到该用户）；缺失 → `401 UNAUTHORIZED`。未配置 Supabase env 时后端回落内存（serverless 不跨请求持久化，仅本地/单测）。
 
 ```ts
 interface Reading {
@@ -135,8 +136,9 @@ interface Reading {
 ```
 **Response 200** — `{ "reading": Reading }`
 
-### （后续）`DELETE /api/history/:id` — 删除记录；账号删除另设端点
-> 隐私红线 §0-3 / §12：用户可删除自己的记录与账号。scaffold 阶段前端提供入口，后端占位。
+### `DELETE /api/history?id=<id>` — 删除一条记录
+仅能删除本人（token 作用域）记录。**Response 200** — `{ "ok": true }`。
+> 隐私红线 §0-3 / §12：用户可删除自己的记录。账号级删除（清空该用户全部记录 + users 行）后续另设端点。
 
 ---
 
