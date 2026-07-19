@@ -1,0 +1,69 @@
+name: Deploy to GitHub Pages
+
+# 部署时机：push 到 main（含 PR merge）+ 手动触发
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages 部署所需权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时刻只跑一个 Pages 部署；不打断进行中的部署
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # 前端调后端的基地址。到 Settings → Secrets and variables → Actions → Variables
+      # 设仓库变量 VITE_API_BASE = 你的 Vercel 后端网址（如 https://xxx.vercel.app）。
+      # 是公开 URL、非密钥，故用 Variables 而非 Secrets。
+      VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install (npm ci)
+        run: npm ci
+
+      # 缺 VITE_API_BASE 就直接失败，避免 Pages 站点静默打到 localhost
+      - name: Guard — VITE_API_BASE 必须已设置
+        run: |
+          if [ -z "$VITE_API_BASE" ]; then
+            echo "::error::仓库变量 VITE_API_BASE 未设置。到 Settings → Secrets and variables → Actions → Variables 设为你的 Vercel 后端网址（如 https://xxx.vercel.app），否则前端会打到 localhost。"
+            exit 1
+          fi
+          echo "VITE_API_BASE = $VITE_API_BASE"
+
+      # base=/star-mansions/ 已写死在 frontend/vite.config.ts → 资源不 404
+      - name: Build 前端（vite build → frontend/dist）
+        run: npm -w frontend run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload dist artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
