@@ -2,7 +2,6 @@
   "name": "backend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "description": "二十八星宿 — 后端 API（Vercel serverless functions + 本地 Express dev server）",
   "engines": {
     "node": "22.x"
