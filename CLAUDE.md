@@ -111,4 +111,28 @@ PRD.md · CLAUDE.md · README.md · package.json · vite.config.ts
 
 ---
 
+## 8. 部署纪律 / Deploy（Vercel 后端 · 血泪教训）
+
+> **as-built 架构**：`frontend/`（Vite → GitHub Pages）+ `backend/`（Vercel serverless functions），经 `VITE_API_BASE` + CORS 连接。与 §1/§2 早期「同仓 Vercel Functions」描述有出入 —— **以本节 + 实际代码为准**（§1/§2/§3 的 monorepo / 前端测算描述属历史，尚未回填）。
+> 后端上 Vercel 踩过的坑，**改部署配置前先读本节**。
+
+1. **Vercel 函数产物必须是 CommonJS。** `backend/tsconfig.json` 用 `"module": "CommonJS"` + `"moduleResolution": "Node"`；**不要**用 `ESNext`/`Bundler`，也**不要**在 `backend/package.json` 写 `"type": "module"`。否则 @vercel/node 产出的 `.js` 里是 ESM `import`，被 Node 当 CJS 加载 → `SyntaxError: Cannot use import statement outside a module` → 所有函数 `FUNCTION_INVOCATION_FAILED`（500）。
+   - 关键：@vercel/node **按本仓 `backend/tsconfig.json` 编译**函数，`module` 字段直接决定产物是 `import` 还是 `require`。
+
+2. **「构建成功」≠「函数能跑」。** Vercel 部署状态绿只代表 build 过；运行时可能仍崩。**上线前本地 emit 验证产物格式**，别赌部署周期：
+   ```
+   npx tsc -p backend/tsconfig.json --noEmit false --outDir <tmp>
+   # 确认 <tmp>/api/*.js 里是 require(...)、没有裸 import，再部署
+   ```
+
+3. **Node 版本锁 22。** `backend/package.json` + 根 `package.json` 加 `"engines": { "node": "22.x" }`（Vercel 不收 24.x；`engines.node` 优先于 dashboard 设置）。
+
+4. **预览部署默认有 Deployment Protection（401）。** 预览 URL 被 Vercel 认证墙挡，黑盒 `curl` 验证不了 → 靠第 2 条「本地 emit 验证」+ 合并后「生产域名实测」。生产域名不被这层挡（返回真结果而非 401）。
+
+5. **CORS 允许来源。** `backend/src/cors.ts` 默认放行 localhost + 生产 Pages 域名（`https://ruixiaoke.github.io`）；后端 `ALLOWED_ORIGIN`（Vercel 项目 env）可覆盖 / 扩展（逗号分隔多个）。换前端域名时同步改这里的默认值。浏览器 fetch 抛 `NETWORK_ERROR`「连不上后端」多半就是 CORS（curl 能通、浏览器被挡）。
+
+6. **地址不硬编码。** GitHub 仓库变量 `VITE_API_BASE` = 后端生产域名，Pages 构建时注入；密钥 / URL 不进代码（§0-3）。Pages 部署 workflow 里加 guard：变量为空则直接失败，避免线上前端静默打 localhost。
+
+---
+
 *本文件随项目演进更新；改铁律（§0）需 Rick 明确确认。*
