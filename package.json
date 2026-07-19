@@ -7,6 +7,9 @@
     "frontend",
     "backend"
   ],
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "concurrently -k -n backend,frontend -c blue,magenta \"npm -w backend run dev\" \"npm -w frontend run dev\"",
     "typecheck": "npm -w backend run typecheck && npm -w frontend run typecheck",
