@@ -1,0 +1,31 @@
+name: CI
+
+# push 和 PR 都跑；任一 step 失败 → 该 commit / PR 标红
+on: [push, pull_request]
+
+# 最小权限：CI 只读代码
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # ① 按 package-lock 精确安装（frozen）—— lock 对不上 / 依赖缺就红
+      - name: Install (npm ci)
+        run: npm ci
+
+      # ② 前后端 tsc --noEmit（覆盖 backend/api + backend/src + frontend/src）
+      - name: Typecheck (backend + frontend)
+        run: npm run typecheck
+
+      # ③ 后端编译校验 + 前端 vite build
+      - name: Build (backend tsc + frontend vite)
+        run: npm run build
