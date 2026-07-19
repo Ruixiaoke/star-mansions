@@ -1,0 +1,19 @@
+{
+  "name": "star-mansions",
+  "private": true,
+  "version": "0.0.0",
+  "description": "二十八星宿测算 Web App — 单仓 monorepo（frontend + backend workspaces）",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c blue,magenta \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "typecheck": "npm -w backend run typecheck && npm -w frontend run typecheck",
+    "build": "npm -w backend run build && npm -w frontend run build",
+    "test": "npm -w backend run test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

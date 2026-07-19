@@ -1,0 +1,108 @@
+/* ===========================================================================
+   tokens.css — 二十八星宿 App 的「视觉真相源 Source of Truth」
+   ---------------------------------------------------------------------------
+   一切颜色 / 字体 / 间距 / 圆角 / 边框 / 阴影只从这里取（var(--...)），
+   页面与组件里禁止再手写 hex、px 魔法值。要改风格 → 改这一份，全站跟着变。
+   （沿用原型 star-mansions 的「东方夜空」体系；本项目刻意为夜空单主题。）
+   =========================================================================== */
+
+:root {
+  /* ── 1. 颜色 · 底与文字 ───────────────────────────── */
+  --color-bg:        #080c1f;  /* 夜空墨蓝 · 页面底 */
+  --color-bg-2:      #0c1230;  /* 次级底 */
+  --color-surface:   #121a3d;  /* 卡片 / 面板 */
+  --color-surface-2: #1c2450;  /* 面板高层 */
+
+  --color-ink:       #ecefff;  /* 主文字 · 星白（略偏冷）*/
+  --color-muted:     #98a0c8;  /* 次要文字 */
+  --color-faint:     #5b6592;  /* 弱化 / 占位文字 */
+
+  /* ── 1. 颜色 · 强调（鎏金，全局唯一主强调色）──────── */
+  --color-gold:      #e6c46a;  /* 主强调 · CTA · 标题 */
+  --color-gold-hi:   #f4dc96;  /* 高光 */
+  --color-gold-dim:  #8f7a40;  /* 暗金 · label / 分隔 */
+
+  /* ── 1. 颜色 · 四象分类色（语义分类，非主强调）────── */
+  --xiang-qinglong:  #46b8ac;  /* 东方青龙 · 青 */
+  --xiang-zhuque:    #e2604a;  /* 南方朱雀 · 朱 */
+  --xiang-baihu:     #cdd6ea;  /* 西方白虎 · 素 */
+  --xiang-xuanwu:    #7b8bec;  /* 北方玄武 · 玄 */
+
+  /* ── 1. 颜色 · 语义状态（与主强调分开）────────────── */
+  --color-ok:        #46b8ac;
+  --color-warn:      #e6c46a;
+  --color-danger:    #e2604a;
+
+  /* ── 2. 字体 ──────────────────────────────────────
+     Web 端可正常加载 webfont（非 artifact 的 CSP 限制）；
+     建议：楷体/宋体优先用系统字，Latin/数据用等宽。 */
+  --font-display: "Kaiti SC","STKaiti","KaiTi","Noto Serif SC",serif;   /* 大字 · 宿名 · 标题（毛笔楷）*/
+  --font-serif:   "Songti SC","STSong","SimSun","Noto Serif SC",serif;  /* 编辑感小标题 */
+  --font-sans:    "PingFang SC","HarmonyOS Sans","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif; /* 正文 / UI */
+  --font-mono:    ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace; /* 日期 / label / 数据 */
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-bold:   600;
+
+  /* 字号阶梯 */
+  --fs-hero:  clamp(58px, 15vw, 132px);  /* 落地页大标题 */
+  --fs-char:  clamp(72px, 18vw, 120px);  /* 本命宿单字 */
+  --fs-h1:    clamp(28px, 5vw, 40px);
+  --fs-h2:    22px;
+  --fs-body:  16px;
+  --fs-sm:    14px;
+  --fs-label: 11px;
+
+  --lh-tight: 1.15;
+  --lh-body:  1.85;
+  --ls-label: 0.24em;   /* label 字距 */
+  --ls-title: 0.12em;   /* 中文标题字距 */
+
+  /* ── 3. 间距（4pt 一档）──────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 22px;
+  --space-6: 30px;
+  --space-8: 40px;
+  --space-10: 56px;
+
+  /* ── 4. 圆角 ──────────────────────────────────────
+     偏柔和（星象、优雅），非直角。 */
+  --radius-sm: 9px;
+  --radius:    12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ── 5. 边框 / 分隔线 ─────────────────────────────── */
+  --border:      1px solid var(--color-panel-line);
+  --color-panel-line: rgba(230, 196, 106, 0.16);  /* 鎏金细线 */
+  --border-dashed: 1px dashed rgba(230, 196, 106, 0.14);
+
+  /* ── 6. 阴影 / 光晕 ───────────────────────────────── */
+  --shadow:      0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow-sm:   0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --glow-gold:   0 0 34px rgba(230, 196, 106, 0.30);   /* 金字/星子光晕 */
+
+  /* ── 其他 ─────────────────────────────────────────── */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur:  0.2s;
+  --measure: 64ch;   /* 正文最佳行宽 */
+}
+
+/* 四象 → 变量的映射（组件按 data-xiang 取色）*/
+[data-xiang="青龙"] { --xiang: var(--xiang-qinglong); }
+[data-xiang="朱雀"] { --xiang: var(--xiang-zhuque); }
+[data-xiang="白虎"] { --xiang: var(--xiang-baihu); }
+[data-xiang="玄武"] { --xiang: var(--xiang-xuanwu); }
+
+/* 全局基线（可选，页面 reset 后引用 token）*/
+body {
+  background: radial-gradient(1200px 800px at 50% -10%, #131b42 0%, var(--color-bg) 55%, #05070f 100%);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
