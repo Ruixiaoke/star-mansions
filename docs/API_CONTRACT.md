@@ -44,18 +44,18 @@ interface ApiError {
 
 **Request Body** — `BirthInput`
 ```json
-{ "calendar": "solar", "year": 1998, "month": 6, "day": 15, "hour": 14, "isLeapMonth": false }
+{ "calendar": "solar", "year": 1990, "month": 5, "day": 4, "hour": 14, "isLeapMonth": false }
 ```
 
-**Response 200**
+**Response 200**（示例为已交叉校验样本：农历四月初十 → 轸水蚓，见 PRD §13）
 ```json
 {
-  "input": { "calendar": "solar", "year": 1998, "month": 6, "day": 15, "hour": 14 },
-  "solarDate": "1998-06-15",
-  "lunarDate": "一九九八年五月廿一",
+  "input": { "calendar": "solar", "year": 1990, "month": 5, "day": 4, "hour": 14 },
+  "solarDate": "1990-05-04",
+  "lunarDate": "一九九〇年四月初十",
   "benming": {
-    "xiu": "房", "zheng": "日", "animal": "兔",
-    "fullName": "房日兔", "siXiang": "青龙", "direction": "东方"
+    "xiu": "轸", "zheng": "水", "animal": "蚓",
+    "fullName": "轸水蚓", "siXiang": "朱雀", "direction": "南方"
   },
   "timeZhi": "未",
   "disclaimer": "内容为传统文化 / 娱乐参考，不构成任何人生 / 医疗 / 投资 / 婚姻等决策建议。"
@@ -77,7 +77,7 @@ interface ComputeResponse {
 { "error": "INVALID_INPUT", "message": "day 超出该月范围" }
 ```
 
-**实现要点**：后端用 `lunar-javascript`——`Solar.fromYmd`/`Lunar.fromYmd` → `getXiu()/getZheng()/getAnimal()`，`hour` 有值时 `getTimeZhi()`。封装成可替换 `computeBenmingXiu(input)`；上线前 `test/xiu.spec.ts` 用 ≥3 已知样本交叉校验（PRD §7/§13）。
+**实现要点**：本命宿依**《宿曜经》算法**（农历月+日：望宿表 + 27 宿序 + 顺数「农历日+13」，见 PRD §7），**不是** `lunar.getXiu()`（那是「值日宿」，另一个概念）。`lunar-javascript` 只做公历↔农历换算（`getMonth()/getDay()`）与时辰地支（`getTimeZhi()`）；七政/动物由固定禽星表给出。封装成可替换 `computeBenmingXiu(input)`；`test/xiu.spec.ts` 已用 12 个已知样本交叉校验（PRD §7/§13）。
 
 ---
 

@@ -14,7 +14,7 @@ export function Landing() {
   return (
     <div className="container landing">
       <section className="hero">
-        <p className="hero__eyebrow">中国二十八宿 · 值日法</p>
+        <p className="hero__eyebrow">中国二十八宿 · 《宿曜经》本命宿</p>
         <h1 className="hero__title">本命星宿</h1>
         <p className="hero__lede">输入你的生日，算出本命星宿，看它的形象、星图与七维解读。</p>
       </section>
