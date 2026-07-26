@@ -10,6 +10,7 @@
 ## 本文件夹
 - [`technical/SCAFFOLD_PLAN.md`](./technical/SCAFFOLD_PLAN.md) — 脚手架方案：技术栈+理由、目录结构、前后端归属、占位清单、命令与本地联调、待确认决策点。
 - [`technical/API_CONTRACT.md`](./technical/API_CONTRACT.md) — 前后端接口契约：每个端点的路径 / 入参 / 返回。前后端类型都对齐此文件。
+- [`external/INDEX.md`](./external/INDEX.md) — 外部资料查证卡片（npm 依赖 / 第三方 API / MCP / CLI / 数据源）：官方文档摘录 + 出处 + 置信度。接外部东西前先查这里（Skill：`.claude/skills/external-docs-search/`）。
 
 ## 架构一句话
 前后端分离：`frontend/`（React+Vite → GitHub Pages）—— HTTP（`VITE_API_BASE`+CORS）——`backend/`（Vercel serverless，`lunar-javascript` 测算）。对齐 Vibe Coding L4。
