@@ -20,6 +20,11 @@ export interface XiuComputed {
 function toLunar(input: BirthInput): Lunar {
   const h = input.hour ?? 0; // 时辰不确定按 0 时建对象，不影响按农历日期定的本命宿
   if (input.calendar === "solar") {
+    // 公历没有闰月概念：收到 calendar="solar" + isLeapMonth=true 说明调用方搞错了历法，
+    // 静默忽略会算出一个「看起来对」的错结果，所以直接报错（CLAUDE §0-2 不臆造）。
+    if (input.isLeapMonth) {
+      throw new Error("公历输入不应带 isLeapMonth（闰月是农历概念）");
+    }
     return Solar.fromYmdHms(input.year, input.month, input.day, h, 0, 0).getLunar();
   }
   // 农历闰月：lunar-javascript 用负月份表示（如闰五月 = -5）

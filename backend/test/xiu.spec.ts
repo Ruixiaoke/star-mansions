@@ -81,6 +81,18 @@ describe("computeBenmingXiu — 端到端（公历/农历输入）", () => {
     expect(r.benming.xiu).toBeTruthy();
   });
 
+  it("公历输入带 isLeapMonth → 抛错（历法搞错时不静默出错结果）", () => {
+    expect(() =>
+      computeBenmingXiu({ calendar: "solar", year: 1990, month: 5, day: 4, hour: null, isLeapMonth: true })
+    ).toThrow(/闰月/);
+  });
+
+  it("农历闰月输入仍正常测算（负月份约定未被误伤）", () => {
+    const r = computeBenmingXiu({ calendar: "lunar", year: 2020, month: 4, day: 10, hour: null, isLeapMonth: true });
+    expect(r.benming.xiu).toBeTruthy();
+    expect(r.benming.fullName).toBe(`${r.benming.xiu}${r.benming.zheng}${r.benming.animal}`);
+  });
+
   it("给定时辰 → timeZhi 为地支（14 点 = 未时），且不改变本命宿", () => {
     const withHour = computeBenmingXiu({ calendar: "solar", year: 1990, month: 5, day: 4, hour: 14 });
     const noHour = computeBenmingXiu({ calendar: "solar", year: 1990, month: 5, day: 4, hour: null });
