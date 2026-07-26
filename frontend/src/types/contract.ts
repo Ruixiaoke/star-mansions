@@ -1,5 +1,5 @@
 /**
- * 前后端接口契约类型（前端侧），对齐 docs/API_CONTRACT.md 与后端 backend/src/types/contract.ts。
+ * 前后端接口契约类型（前端侧），对齐 docs/technical/API_CONTRACT.md 与后端 backend/src/types/contract.ts。
  */
 
 export type Calendar = "solar" | "lunar";

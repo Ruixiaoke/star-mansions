@@ -103,7 +103,7 @@ star-mansions/
 └─ README.md                   # 顶层启动说明
 ```
 
-> **契约类型为何两侧各一份**：保持 `frontend/`、`backend/` 完全独立、可各自部署（不引 shared 包耦合）。以 `docs/API_CONTRACT.md` 为唯一契约 SoT，两侧类型对齐它。（后续若嫌重复，可再抽 `shared/` 包——非 MVP。）
+> **契约类型为何两侧各一份**：保持 `frontend/`、`backend/` 完全独立、可各自部署（不引 shared 包耦合）。以 `docs/technical/API_CONTRACT.md` 为唯一契约 SoT，两侧类型对齐它。（后续若嫌重复，可再抽 `shared/` 包——非 MVP。）
 
 ---
 

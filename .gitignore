@@ -60,6 +60,9 @@ lerna-debug.log*
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea/
+
+# --- Claude Code（个人本地覆盖，不共享）---
+.claude/settings.local.json
 *.suo
 *.ntvs*
 *.njsproj

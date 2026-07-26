@@ -15,7 +15,7 @@ star-mansions/
 ```
 
 前端经 HTTP（`VITE_API_BASE` + CORS）调后端 `/api/compute` 做测算（`lunar-javascript`）。
-真相源：产品 = `docs/PRD.md`，视觉 = `docs/tokens.css`，规则 = `CLAUDE.md`，接口 = `docs/API_CONTRACT.md`。
+真相源：产品 = `docs/prd/PRD.md`，视觉 = `docs/design/tokens.css`，规则 = `CLAUDE.md`，接口 = `docs/technical/API_CONTRACT.md`。
 
 ## 快速开始
 

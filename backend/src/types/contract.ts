@@ -1,5 +1,5 @@
 /**
- * 前后端接口契约类型（后端侧）。唯一契约 SoT = docs/API_CONTRACT.md。
+ * 前后端接口契约类型（后端侧）。唯一契约 SoT = docs/technical/API_CONTRACT.md。
  * 前端 frontend/src/types/contract.ts 与本文件保持一致。
  */
 
