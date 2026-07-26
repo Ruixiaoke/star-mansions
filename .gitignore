@@ -63,6 +63,8 @@ lerna-debug.log*
 
 # --- Claude Code（个人本地覆盖，不共享）---
 .claude/settings.local.json
+# Agent 隔离用的临时 git worktree（含 node_modules，纯本地产物）
+.claude/worktrees/
 *.suo
 *.ntvs*
 *.njsproj
