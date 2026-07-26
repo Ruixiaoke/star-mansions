@@ -27,7 +27,7 @@
 <!-- 非平凡改动请说明： -->
 <!-- - 解决的问题 -->
 <!-- - 影响范围（frontend / backend / 两者） -->
-<!-- - 契约 / API 改动（同步 docs/API_CONTRACT.md 与前后端 types/contract.ts） -->
+<!-- - 契约 / API 改动（同步 docs/technical/API_CONTRACT.md 与前后端 types/contract.ts） -->
 <!-- - 风险 -->
 <!-- - 测试计划 -->
 
@@ -40,7 +40,7 @@
 - [ ] 无硬编码密钥；`.env` 未入库（仅 `.env.example`）
 - [ ] 前端只走 `tokens.css` 变量，无硬编码 hex / px —— 若改样式（CLAUDE §4）
 - [ ] 结果页 / About 免责声明仍在 —— 若改相关页（CLAUDE §0-1）
-- [ ] 前后端契约变更已同步 `docs/API_CONTRACT.md` 与两侧类型 —— 若改接口
+- [ ] 前后端契约变更已同步 `docs/technical/API_CONTRACT.md` 与两侧类型 —— 若改接口
 - [ ] 文档已更新（PRD / docs，若适用）
 
 ## Screenshots / Evidence
