@@ -17,13 +17,6 @@
       "Bash(git commit*)",
       "Bash(git checkout -b*)"
     ],
-    "ask": [
-      "Bash(git push*)",
-      "Bash(gh pr create*)",
-      "Bash(vercel*)",
-      "Bash(npm publish*)",
-      "Bash(npx supabase*)"
-    ],
     "deny": [
       "Bash(git push --force*)",
       "Bash(git push -f*)",
@@ -35,6 +28,16 @@
       "Read(**/secrets.json)",
       "Read(**/*.pem)",
       "Read(**/*.key)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(gh pr create*)",
+      "Bash(vercel*)",
+      "Bash(npm publish*)",
+      "Bash(npx supabase*)"
     ]
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }

@@ -20,7 +20,7 @@ your-skill-name/
     └── xxx.py        可选 · Code 类，Claude 执行，代码本身不进 context，只有运行结果进
 
 ---
-2️⃣ description 自检清单（课上说九成翻车都在这一行）
+description 自检清单（课上说九成翻车都在这一行）
 
 写完先对着这四条检查：
 
