@@ -18,7 +18,7 @@ interface BirthInput {
   month: number;           // 1–12
   day: number;             // 1–31
   hour?: number | null;    // 0–23；省略/null = 时辰不确定
-  isLeapMonth?: boolean;   // 仅农历闰月用；默认 false
+  isLeapMonth?: boolean;   // 仅农历闰月用；默认 false。calendar="solar" 时必须省略/false，传 true → 400
 }
 
 interface Benming {
@@ -75,6 +75,10 @@ interface ComputeResponse {
 **Response 400** — `ApiError`
 ```json
 { "error": "INVALID_INPUT", "message": "day 超出该月范围" }
+```
+`calendar: "solar"` + `isLeapMonth: true` 是历法自相矛盾的入参（公历无闰月），后端不静默忽略，返回：
+```json
+{ "error": "COMPUTE_FAILED", "message": "公历输入不应带 isLeapMonth（闰月是农历概念）" }
 ```
 
 **实现要点**：本命宿依**《宿曜经》算法**（农历月+日：望宿表 + 27 宿序 + 顺数「农历日+13」，见 PRD §7），**不是** `lunar.getXiu()`（那是「值日宿」，另一个概念）。`lunar-javascript` 只做公历↔农历换算（`getMonth()/getDay()`）与时辰地支（`getTimeZhi()`）；七政/动物由固定禽星表给出。封装成可替换 `computeBenmingXiu(input)`；`test/xiu.spec.ts` 已用 12 个已知样本交叉校验（PRD §7/§13）。
