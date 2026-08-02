@@ -143,4 +143,35 @@ PRD.md · CLAUDE.md · README.md · package.json · vite.config.ts
 
 ---
 
+## 9. Agent Team 纪律（任务必须以 agent team 完成）
+
+> **规则：本项目的任务一律启用 agent team 完成，不由单个 agent 从头包到尾。**
+> 会话里的主 agent = **编排者**：读需求 → 拆任务 → 派活 → 汇总证据 → 交付给 Rick；**不亲自写产品代码**。
+
+### 9.1 角色分工（`.claude/agents/`）
+
+| Agent | 干什么 | 不干什么 |
+|---|---|---|
+| `research-agent` | 外部资料取证（npm / API / MCP / CLI / 数据源）落 `docs/external/` 卡片；传统文化考据带出处 | 不写产品代码 |
+| `dev-agent` | 实现功能 / 修 bug / 重构；本地 typecheck + build 自查 | 不做验收判定、不自合并、不碰部署 |
+| `test-agent` | 常规验收门禁：跑测试 / PRD §13 核对 / 红线体检 / emit 校验 / 冒烟 | 不实现功能、不为变绿改产品代码 |
+| `codex-test-agent` | 换一个模型做**独立对抗式复核**，出第二意见（只读不改）| 同上；⚠️ 烧共享配额，别对每个小改动都跑 |
+
+### 9.2 最小编队
+
+- **默认**：`dev-agent` 实现 → `test-agent` 验收。两步都得有，缺一不算完成。
+- **要动外部依赖 / 第三方接口 / 测算算法 / 释义出处**：先 `research-agent` 出带出处的结论，再 `dev-agent` 动手。
+- **高风险区**（本命宿测算 / API 契约 / Supabase 存储 / backend 构建配置 / CI）或 Rick 点名要双验：
+  `test-agent` 与 `codex-test-agent` **并行**跑，各自独立出结论，**不互相传阅结果**（避免相互背书）。
+
+### 9.3 编排纪律
+
+1. **互不依赖的 agent 同时发**（一条消息里多个 Agent 调用），别串行干等。
+2. **派活要带交接包**：需求 SoT 的路径（PRD / CLAUDE.md / tokens.css）、Rick 已拍板的决策、已有半成品、明确的「不要做什么」。
+3. **主 agent 不替 agent 背书**：向 Rick 汇报时必须区分「agent 报告的」与「我自己复核过的」；review agent 报红就照实报红，不粉饰、不代它改结论。
+4. **交付口径仍走 §5**：改动走 PR、套 PR 模板、**不自合并**，等 Rick review。
+5. **窄例外**：纯问答 / 只读查看 / 单处 typo / 文档措辞微调，可不起 team —— 但要在回复里说明为什么没起。
+
+---
+
 *本文件随项目演进更新；改铁律（§0）需 Rick 明确确认。*
