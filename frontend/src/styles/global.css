@@ -192,6 +192,10 @@ code {
   border-color: var(--color-gold);
   box-shadow: var(--glow-gold);
 }
+/* 错误态：与字段下方的文字提示配套，不单靠颜色传达信息 */
+.field__input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
 .checkbox {
   display: inline-flex;
   align-items: center;
@@ -471,6 +475,89 @@ code {
 .form-err {
   color: var(--color-danger);
   font-size: var(--fs-sm);
+}
+
+/* ── 加减法计算器（独立工具页 · docs/prd/addition-subtraction-prd.md）── */
+.calc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.calc .form-err {
+  margin: 0;
+  line-height: var(--lh-tight);
+}
+/* .seg-group / .cta 自带的外距在这里改由 flex gap + 就近 margin 接管；
+   窄屏两个选项放不下时换行，不横向溢出 */
+.calc .seg-group {
+  flex-wrap: wrap;
+  margin: var(--space-1) 0 0;
+}
+.calc .cta {
+  align-self: center;
+  margin-top: 0;
+}
+
+/* 运算类型：清掉 fieldset/legend 的浏览器默认边框与内距。
+   fieldset 保持块级（不改 display:flex —— legend 在 flex 容器里各浏览器渲染不一致），
+   min-width:0 抵消 fieldset 默认的 min-content 宽度，避免撑破外层 flex。 */
+.calc__ops {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.calc__ops legend {
+  padding: 0;
+}
+
+/* radio 铺满整个 .seg 且透明：视觉交给标签，但控件仍在可达性树里，
+   键盘（Tab 进组 + 方向键切换）与读屏照常可用 —— 不用 display:none。 */
+.calc__seg {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+.calc__radio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.calc__seg:has(.calc__radio:focus-visible) {
+  background: var(--color-surface-2);
+  color: var(--color-gold-hi);
+  box-shadow: var(--glow-gold);
+}
+
+/* 结果区：算式字号明显大于正文（PRD §7）；大整数算式换行而非撑破布局 */
+.calc__result {
+  margin-top: var(--space-6);
+  min-height: var(--space-10); /* 占位提示 ↔ 大字算式切换时不抖动 */
+  text-align: center;
+}
+.calc__expression {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--color-gold);
+  text-shadow: var(--glow-gold);
+  overflow-wrap: anywhere;
+}
+.calc__hint {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  /* 窄屏把主操作拉满，保证拇指点得到 */
+  .calc .cta {
+    align-self: stretch;
+  }
 }
 
 /* ── 载入动画 ─────────────────────────────────────────── */
