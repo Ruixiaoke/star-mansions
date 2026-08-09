@@ -5,6 +5,7 @@ import { Login } from "./pages/Login";
 import { History } from "./pages/History";
 import { About } from "./pages/About";
 import { Calculator } from "./pages/Calculator";
+import { Tarot } from "./pages/Tarot";
 import { Disclaimer } from "./components/Disclaimer";
 
 // HashRouter：GitHub Pages 子路径下刷新不 404，零服务端配置。
@@ -18,6 +19,7 @@ export default function App() {
             <NavLink to="/" end>测算</NavLink>
             <NavLink to="/history">我的</NavLink>
             <NavLink to="/calc">算术</NavLink>
+            <NavLink to="/tarot">塔罗</NavLink>
             <NavLink to="/about">关于</NavLink>
           </nav>
         </header>
@@ -31,6 +33,7 @@ export default function App() {
             <Route path="/about" element={<About />} />
             {/* 与二十八宿主线无关的独立工具页 */}
             <Route path="/calc" element={<Calculator />} />
+            <Route path="/tarot" element={<Tarot />} />
           </Routes>
         </main>
 

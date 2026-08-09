@@ -589,3 +589,273 @@ code {
     transition: none !important;
   }
 }
+
+/* ── 三张牌塔罗（独立工具页 · docs/prd/tarot-prd.md）────────────
+   花色只用中性层级（描边 / 透明度 / 花色符号）区分，
+   不挪用四象色 --xiang（那是二十八宿主线的分类语义色，PRD §12）。 */
+.tarot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.tarot__rules {
+  color: var(--color-muted);
+  font-size: var(--fs-sm);
+}
+.tarot__rules p {
+  margin: 0 0 var(--space-2);
+}
+.tarot__rules p:last-child {
+  margin-bottom: 0;
+}
+
+/* 洗牌状态区：状态与「重新洗牌」并排，窄屏换行 */
+.tarot__deck {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.tarot__deck-state {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--fs-sm);
+}
+.tarot__code {
+  letter-spacing: var(--ls-label);
+}
+.tarot__reshuffle {
+  margin-top: 0;
+}
+
+.tarot__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.tarot__inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.tarot__form .form-err {
+  margin: 0;
+  line-height: var(--lh-tight);
+}
+.tarot__form-err {
+  margin: 0;
+}
+.tarot__form .cta {
+  align-self: center;
+  margin-top: 0;
+}
+
+.tarot__result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.tarot__empty {
+  margin: 0;
+  text-align: center;
+}
+
+/* 三张牌：桌面横向并排，窄屏纵向堆叠（PRD §12）；整块适合截图 */
+.tarot__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+.tarot-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  animation: tarot-reveal var(--dur) var(--ease) both;
+}
+.tarot-card__slot {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+}
+.tarot-card__hint {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-tight);
+  color: var(--color-faint);
+}
+
+/* 卡面装饰符号（花色字 / 大阿卡纳编号）。逆位只转这一层装饰，
+   正文一律保持正向——旋转正文会让文字读不了、也毁掉选中复制与读屏（PRD §12）。 */
+.tarot-card__glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-10);
+  height: var(--space-10);
+  margin: var(--space-2) auto;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  color: var(--color-gold);
+}
+.tarot-card[data-orientation="reversed"] .tarot-card__glyph {
+  transform: rotate(180deg);
+}
+
+/* 牌名自带「· 正位 / · 逆位」文字标识；两态共用同一套样式，
+   不用红色 / 警示色，视觉权重相当（红线 §10.2-6）。 */
+.tarot-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-title);
+  line-height: var(--lh-tight);
+  color: var(--color-gold);
+}
+.tarot-card__en {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--color-faint);
+}
+.tarot-card__number {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-muted);
+}
+.tarot-card__keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: var(--space-2) 0;
+  padding: 0;
+}
+.tarot-card__keywords li {
+  border: var(--border-dashed);
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-3);
+  font-size: var(--fs-label);
+  color: var(--color-muted);
+}
+.tarot-card__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+}
+.tarot-card__text--sub {
+  color: var(--color-muted);
+}
+
+/* 双层分离（PRD v0.3 §9.1 / §12）：〔原文依据〕与〔以下为本项目编写〕分区块。
+   区块标题是可见文字，不靠样式差异传达 —— 样式只是帮忙，分不清的责任不能推给颜色。 */
+.tarot-card__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--border-dashed);
+}
+.tarot-card__block-label {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  font-weight: var(--fw-normal);
+  color: var(--color-gold-dim);
+}
+/* 原文层：换底色 + 起边，与「我们写的」那半在视觉上一眼分开 */
+.tarot-card__block--source {
+  background: var(--color-bg-2);
+  border-top: none;
+  border-left: var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+/* 引文质感：字号比编写层正文（--fs-sm）降一档，与「我们写的」那半拉开层级（PRD §12） */
+.tarot-card__quote {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-label);
+  line-height: var(--lh-body);
+  color: var(--color-ink);
+}
+/* 原文缺这一条时的说明（占位未摘录 / 原文确无），不是错误态，不用警示色 */
+.tarot-card__quote--none {
+  font-family: var(--font-sans);
+  color: var(--color-faint);
+}
+.tarot-card__cite {
+  margin: 0;
+  font-size: var(--fs-label);
+  color: var(--color-faint);
+}
+
+/* 未定稿内容的标记（PRD §9.2）：占位必须一眼看出来，但它不是警告 */
+.tarot-tag {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0 var(--space-3);
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold);
+}
+
+.tarot__summary .section-h {
+  margin: 0 0 var(--space-3);
+}
+.tarot__summary-text {
+  margin: var(--space-3) 0 0;
+  max-width: var(--measure);
+  color: var(--color-ink);
+}
+.tarot__closing {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-serif);
+  color: var(--color-muted);
+  font-size: var(--fs-sm);
+}
+
+@keyframes tarot-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .tarot__inputs,
+  .tarot__cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .tarot__form .cta {
+    align-self: stretch;
+  }
+}
+/* 翻牌动画不得延迟内容可读：reduced-motion 下直接出结果，朝向标识照常可见（PRD §12） */
+@media (prefers-reduced-motion: reduce) {
+  .tarot-card {
+    animation: none;
+  }
+}

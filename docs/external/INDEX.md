@@ -19,3 +19,4 @@
 | 名称 | 类型 | 版本 | 抓取日期 | 置信度 | 链接 |
 |------|------|------|----------|--------|------|
 | gh（GitHub CLI） | CLI | 2.95.0 | 2026-07-26 | 已验证 | [gh-cli.md](./gh-cli.md) |
+| 韦特塔罗 78 张正逆位释义（公版原文） | 第三方数据集 | Waite《The Pictorial Key to the Tarot》1910/1911 初版 · 1922 Rider 重印本扫描 | 2026-08-09 | 部分验证 | [tarot-rws-meanings.md](./tarot-rws-meanings.md) |
