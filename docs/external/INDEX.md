@@ -20,3 +20,5 @@
 |------|------|------|----------|--------|------|
 | gh（GitHub CLI） | CLI | 2.95.0 | 2026-07-26 | 已验证 | [gh-cli.md](./gh-cli.md) |
 | 韦特塔罗 78 张正逆位释义（公版原文） | 第三方数据集 | Waite《The Pictorial Key to the Tarot》1910/1911 初版 · 1922 Rider 重印本扫描 | 2026-08-09 | 部分验证 | [tarot-rws-meanings.md](./tarot-rws-meanings.md) |
+| 六爻（金钱卦 / 以钱代蓍）· 铜钱起卦考据 | 文化考据（典籍） | 《周易》64 卦 +《说卦传》《序卦传》《杂卦传》《彖传》《系辞》· 《周易正义》·《周易集解》· 《周礼·大卜》· 《古今图书集成》卷544《卜筮全书》· 《易学启蒙·考变占》· 《祛疑说》· 《陔余丛考》卷30 · 《梅花易数》 | 2026-08-30 | 部分验证 | [liuyao-tradition.md](./liuyao-tradition.md) |
+| 六爻页外部技术面（npm 生态 + 64 卦 / 八经卦数据源） | 依赖调研 + 数据源 | npm registry 快照 2026-08-30 · lunar-javascript 1.7.7 · zh.wikisource《周易》64 页 +《说卦传》·《梅花易数》· Unicode UCD latest | 2026-08-30 | 部分验证 | [liuyao-coin-method.md](./liuyao-coin-method.md) |

@@ -3,7 +3,7 @@
 > 唯一契约 SoT。`frontend/src/types/contract.ts` 与 `backend/src/types/contract.ts` 都对齐本文件。
 > Base URL：前端读 `VITE_API_BASE`（本地 `http://localhost:3000`，生产 = Vercel 域名）。
 > 所有请求/响应 `Content-Type: application/json`。后端对 `ALLOWED_ORIGIN` 开 CORS（含预检 `OPTIONS`）。
-> 状态：`/api/compute`、`/api/auth`、`/api/history` 均已接真实存储（Supabase，PRD §15-a）；未配置 Supabase env 时 auth/history 回落内存 mock。
+> 状态：`/api/compute`、`/api/auth`、`/api/history` 均已接真实存储（Supabase，PRD §15-a）；`/api/divination` 代码已就绪，**待在 Supabase 跑 `backend/db/schema.sql` 建 `divinations` 表后才在生产生效**（未建表就打真库会 500，见 §4 与部署纪律 §8-7）。未配置 Supabase env 时 auth/history/divination 回落内存 mock。
 
 ---
 
@@ -139,6 +139,84 @@ interface Reading {
 ### `DELETE /api/history?id=<id>` — 删除一条记录
 仅能删除本人（token 作用域）记录。**Response 200** — `{ "ok": true }`。
 > 隐私红线 §0-3 / §12：用户可删除自己的记录。账号级删除（清空该用户全部记录 + users 行）后续另设端点。
+
+---
+
+## 4. `/api/divination` — 卦例记录（Supabase）
+
+登录后保存 / 回看 / 删除一次起卦的结果（存 Supabase `divinations` 表，六爻 PRD §11/§12）。**需 `Authorization: Bearer <token>`**（token = 登录返回值，作用域到该用户）；缺失 → `401 UNAUTHORIZED`。未配置 Supabase env 时后端回落内存（serverless 不跨请求持久化，仅本地/单测）。
+
+```ts
+type DivinationKind = "liuyao";   // 本期恒为 "liuyao"；本表预留给将来别的玩法复用
+
+// 所问事项（PRD §7.1）：Tier A =《周礼》八命 5 项，Tier B =《梅花易数》3 项。
+// 与 frontend/src/data/liuyao-topics.ts 的 TopicKey 同集合，加分类时前端 data / 两侧 contract 一起改。
+type DivinationTopic =
+  | "mou" | "yu" | "guo" | "zhi" | "zheng"        // 谋 / 与 / 果 / 至 / 征
+  | "career" | "wealth" | "relationship";        // 事业 / 财运 / 感情
+
+interface DivinationRecord {
+  id: string;
+  userId: string;
+  kind: DivinationKind;
+  topic: DivinationTopic;  // 枚举值，非自由文本（PRD §14 隐私设计，API 层强制）
+  code: string;            // 卦码，六个爻数，如 "987678"
+  payload: unknown;        // 卦的完整快照（jsonb）
+  createdAt: string;
+}
+```
+
+### `POST /api/divination` — 保存一卦
+**Request Body**
+```json
+{
+  "kind": "liuyao",
+  "topic": "career",
+  "code": "987678",
+  "payload": { "tosses": [], "yaos": [], "primaryOrder": 1, "changedOrder": 43, "movingPositions": [2] }
+}
+```
+**Response 200** — `{ "divination": DivinationRecord }`
+```json
+{
+  "divination": {
+    "id": "d_1", "userId": "u_user@example.com", "kind": "liuyao",
+    "topic": "career", "code": "987678",
+    "payload": { "tosses": [], "yaos": [], "primaryOrder": 1, "changedOrder": 43, "movingPositions": [2] },
+    "createdAt": "2026-08-30T00:00:00.000Z"
+  }
+}
+```
+四个字段全部必填（`payload` 显式传 `null`、`topic` 传 `""` 都算缺失）。两处枚举在 **API 层强制**，不是只靠前端表单：
+
+- **`kind` 只接受 `"liuyao"`**，其他值一律 400。
+- **`topic` 只接受上列 8 个值**，其他值（含自由文本、大小写变体、非字符串）一律 400。这是隐私控制而不只是格式校验：PRD §14 把「枚举而非自由文本」定为刻意设计，绕过前端直接 POST 不得把用户手打的私人处境写进 `divinations` 表（该表 `user_id + topic + created_at` 合起来构成行为画像）。要放开自由文本须先过一轮隐私评估（PRD §17）。
+
+两者都与对应的字面量/联合类型对齐 —— 类型说只有这些值，运行时就得真的只收这些值；加分类 / 加玩法时类型与校验两处一起改。
+
+**Response 400** — `ApiError`
+```json
+{ "error": "INVALID_INPUT", "message": "需要 kind / topic / code / payload 字段" }
+```
+```json
+{ "error": "INVALID_INPUT", "message": "本期 kind 只接受 \"liuyao\"" }
+```
+```json
+{ "error": "INVALID_INPUT", "message": "topic 只接受：mou / yu / guo / zhi / zheng / career / wealth / relationship" }
+```
+> 非法 `topic` 的错误信息**不回显收到的值**：那个值本身可能就是敏感自由文本，回显等于把它送进响应体与上游日志。
+> `code` 后端**不校验格式**（不检查是否为六位 `6/7/8/9`）：起卦引擎在前端，本端点只存快照。这是刻意取舍，不是遗漏。
+
+### `GET /api/divination` — 列出当前用户的卦例
+按 `createdAt` 倒序。可选 query `?kind=liuyao` 按类型过滤。
+**Response 200** — `{ "divinations": DivinationRecord[] }`
+
+### `DELETE /api/divination?id=<id>` — 删除一条卦例
+仅能删除本人（token 作用域）记录。**Response 200** — `{ "ok": true }`。
+> 隐私红线 §0-3 / 六爻 PRD §14：**物理删除**，不做软删标记。`user_id + topic + created_at` 合起来构成行为画像，因此服务端日志不记录 `topic` 值。
+
+**设计说明（为什么不复用 `/api/history`）**：现有 `readings` 表是二十八宿专用的，`benming` / `solar_date` 是**硬列**（见 `backend/db/schema.sql`），塞不进卦象数据。改现有表 = 动线上已有数据 + 动已发布契约；新增表与端点是**纯增量、零回归风险**，`/api/compute`、`/api/auth`、`/api/history` 行为不变。`kind` 列为将来别的玩法留位。
+> **上线顺序（部署纪律 §8-7，反了会 500）**：**先**在 Supabase SQL Editor 跑 `backend/db/schema.sql` 建 `divinations` 表，**再**部署后端。
 
 ---
 

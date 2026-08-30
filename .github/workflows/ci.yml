@@ -33,3 +33,8 @@ jobs:
       # ③ 后端编译校验 + 前端 vite build
       - name: Build (backend tsc + frontend vite)
         run: npm run build
+
+      # ④ 全仓测试门禁（liuyao-prd §23-Q7）：后端 + 前端 vitest 全跑，一条挂 → CI 红
+      #    CI 无 SUPABASE_* env，走 db.ts 内存回落分支，与本地一致
+      - name: Test (backend + frontend vitest)
+        run: npm test
