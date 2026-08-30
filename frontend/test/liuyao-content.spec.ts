@@ -315,8 +315,13 @@ describe("GUA_READINGS 结构自洽（团队交接包点名的补充断言）", 
     }
   });
 
-  it("GUA_READINGS_SIGNOFF === false（PRD §16-11：尚未人工逐条签字，如实反映现状，不能被悄悄改成 true）", () => {
-    expect(GUA_READINGS_SIGNOFF).toBe(false);
+  // PRD §16-11 的人工签字已完成（Rick 2026-08-30，PR #18；复核范围与旁证见
+  // `gua-readings.ts` 里 GUA_READINGS_SIGNOFF 上方的签字记录）。
+  // 这条断言从 false 翻到 true 是**一次有据可查的状态变更**，不是把测试改绿：
+  // 它继续钉住「这个标志不许被随手改动」——日后若有人大改文案却不重新签字，
+  // 应当先把它改回 false，那时这条会红，提醒他补签。
+  it("GUA_READINGS_SIGNOFF === true（PRD §16-11 人工逐条签字已完成，见 gua-readings.ts 签字记录）", () => {
+    expect(GUA_READINGS_SIGNOFF).toBe(true);
   });
 });
 

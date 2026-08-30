@@ -29,7 +29,7 @@
 | C6 | 后端 handler + 入口 | **done** | dev-backend |
 | D1 | 64 卦原文 448 条 | **done** | dev-data |
 | D2 | 八经卦定表 8 条 | **done** | dev-engine |
-| D3 | 白话疏解 64 段 | **needs-human** | dev-content |
+| D3 | 白话疏解 64 段 | **done**（Rick 2026-08-30 签字） | dev-content |
 | D4 | 类别框架句 8 条 | **done** | dev-content |
 | T1 | 原文抓取脚本 | **done** | dev-data |
 | M1 | API 契约 §4 | **done** | dev-backend |
@@ -796,8 +796,8 @@
 
 | # | 状态 | 数 |
 |---|---|---|
-| **done** | 21 | P1 P2 P3 C1 C2 C3 C4 C5 C6 D1 D2 D4 T1 M1 M2 M3 M4 V1 V2 V3 V4 |
-| **needs-human** | 2 | **D3**（64 段白话待人工签字，`GUA_READINGS_SIGNOFF=false`）· **O1**（Rick 在 Supabase 跑 `schema.sql` 建表，顺序不可反） |
+| **done** | 22 | P1 P2 P3 C1 C2 C3 C4 C5 C6 D1 D2 D3 D4 T1 M1 M2 M3 M4 V1 V2 V3 V4 |
+| **needs-human** | 1 | **O1**（Rick 在 Supabase SQL Editor 跑 `schema.sql` 建表，顺序不可反）|
 | **skipped** | 0 | —— |
 
 **门禁**：typecheck ✅ / build ✅ / **543 测试全绿**（后端 52 + 前端 491）/ Vercel emit CommonJS ✅ / CI 全绿 ✅
@@ -806,5 +806,13 @@
 **agent team 编队**：11 个 agent（2 research / 5 dev / 3 test / 1 codex-test），按 `CLAUDE.md §9` 并行分轨、文件领地互不重叠。
 
 **agent 三次纠正编排者**：① dev-page 顶回「Q1 已拍板」的漏看；② dev-data 用门禁反证纠正卦序 28/62 写错；③ dev-content 用数量级证伪编排者的根因订正。
+
+### D3 · 人工签字完成（Rick 2026-08-30）
+- **状态**：done
+- **签字人**：Rick（仓库所有者），在 PR #18 上签字。
+- **复核范围**：PRD §16-11 点名的 7 卦高风险文案 —— 12 否 / 23 剥 / 28 大过 / 29 坎 / 36 明夷 / 39 蹇 / 47 困，逐条读过。
+- **旁证（不替代签字）**：`codex-test-agent` 独立读过 12 卦，结论「全部是取象 + 典籍训解转述 + 开放式反思，无一处把『凶』译成判词」。
+- **改动**：`gua-readings.ts:126` `GUA_READINGS_SIGNOFF` `false` → `true`，上方补签字记录（含「日后大改文案须重新签字」的约束）；`liuyao-content.spec.ts` 对应断言同步翻转并注明这是有据可查的状态变更、不是把测试改绿。
+- **证据**：`npm run typecheck` 绿；`npm test` → 后端 52 / 前端 491，**543 全绿**。
 
 taskResult=Done
