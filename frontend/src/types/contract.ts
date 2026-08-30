@@ -57,3 +57,32 @@ export interface Reading {
   benming: Benming;
   createdAt: string;
 }
+
+/** 卦例类型；本期恒为 "liuyao"（六爻 PRD §11） */
+export type DivinationKind = "liuyao";
+
+/**
+ * 所问事项（六爻 PRD §7.1）。与 src/data/liuyao-topics.ts 的 TopicKey 同集合，
+ * 后端 backend/src/types/contract.ts 另存一份（不能跨端 import），加分类时三处一起改。
+ * 枚举而非 string 是隐私设计（PRD §14）：不允许自由文本落库。
+ */
+export type DivinationTopic =
+  | "mou"
+  | "yu"
+  | "guo"
+  | "zhi"
+  | "zheng"
+  | "career"
+  | "wealth"
+  | "relationship";
+
+export interface DivinationRecord {
+  id: string;
+  userId: string;
+  kind: DivinationKind;
+  topic: DivinationTopic;
+  /** 卦码，六个爻数，如 "987678" */
+  code: string;
+  payload: unknown;
+  createdAt: string;
+}

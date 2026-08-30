@@ -9,6 +9,11 @@ import { corsHeaders } from "./cors";
 import { handleCompute } from "./handlers/compute";
 import { handleAuthLogin } from "./handlers/auth";
 import { handleHistoryList, handleHistorySave, handleHistoryDelete } from "./handlers/history";
+import {
+  handleDivinationList,
+  handleDivinationSave,
+  handleDivinationDelete,
+} from "./handlers/divination";
 import { isDbEnabled } from "./lib/db";
 
 const app = express();
@@ -59,9 +64,26 @@ app.delete("/api/history", async (req, res) => {
   res.status(r.status).json(r.body);
 });
 
+app.get("/api/divination", async (req, res) => {
+  const kind = typeof req.query.kind === "string" ? req.query.kind : undefined;
+  const r = await handleDivinationList(bearer(req.headers.authorization), kind);
+  res.status(r.status).json(r.body);
+});
+
+app.post("/api/divination", async (req, res) => {
+  const r = await handleDivinationSave(bearer(req.headers.authorization), req.body);
+  res.status(r.status).json(r.body);
+});
+
+app.delete("/api/divination", async (req, res) => {
+  const id = typeof req.query.id === "string" ? req.query.id : undefined;
+  const r = await handleDivinationDelete(bearer(req.headers.authorization), id);
+  res.status(r.status).json(r.body);
+});
+
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {
   console.log(
-    `[backend] dev server → http://localhost:${port}  (compute 真实；auth/history ${isDbEnabled() ? "→ Supabase" : "→ 内存 mock（未配 SUPABASE env）"}）`,
+    `[backend] dev server → http://localhost:${port}  (compute 真实；auth/history/divination ${isDbEnabled() ? "→ Supabase" : "→ 内存 mock（未配 SUPABASE env）"}）`,
   );
 });

@@ -859,3 +859,494 @@ code {
     animation: none;
   }
 }
+
+/* ── 六爻起卦（独立玩法页 · docs/prd/liuyao-prd.md）────────────────
+   §13 视觉纪律：一切颜色 / 字号 / 间距 / 圆角只走 var(--...)，本版**不新增 token**。
+   阴阳与八卦的区分靠描边 / 透明度 / 卦符字形，不靠新颜色；
+   **四象色 --xiang-* 一律不挪用**（那是二十八宿主线的分类语义色，混用会污染视觉语言）。
+   动爻标记用 --color-gold，**不用 --color-danger** —— 动爻不是坏消息。 */
+.liuyao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.liuyao__rules {
+  color: var(--color-muted);
+  font-size: var(--fs-sm);
+}
+.liuyao__rules p {
+  margin: 0 0 var(--space-3);
+}
+.liuyao__rules p:last-child {
+  margin-bottom: 0;
+}
+.liuyao__rules strong {
+  color: var(--color-ink);
+}
+
+/* 说明性小字：来源档次标注、锁定说明、动爻与「不代为取断」注文都走这一支。
+   它不是错误态，也不是免责声明（免责走 .disclaimer），所以不用警示色。 */
+.liuyao-note {
+  margin: var(--space-2) 0 0;
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--color-muted);
+}
+.liuyao-note--moving {
+  margin: 0;
+  color: var(--color-ink);
+}
+/* 〔本页说明〕：第三类文字的可见标签（既非典籍原文、也非卦象释义，见 GuaReading.tsx） */
+.liuyao-note__label {
+  margin-right: var(--space-2);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+}
+
+/* 未定稿 / 状态标记（示例（占位）、已锁定）：一眼看得出来，但它不是警告 */
+.liuyao-tag {
+  display: inline-block;
+  margin: 0 0 0 var(--space-2);
+  padding: 0 var(--space-3);
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold);
+}
+
+/* ── 提问区（掷前必选、掷后锁定）───────────────────────── */
+.liuyao__select {
+  font-family: var(--font-sans);
+}
+.liuyao__topic-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-title);
+  color: var(--color-gold);
+}
+.liuyao__topic-hint {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+}
+
+/* ── 掷币区 ──────────────────────────────────────────── */
+.liuyao__toss {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+.liuyao__coins {
+  display: flex;
+  gap: var(--space-4);
+}
+/* 一枚铜钱：正反靠可见汉字（背 / 字）区分，描边与底色只是辅助 —— 不只靠图形，也不只靠颜色 */
+.liuyao-coin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  color: var(--color-muted);
+  animation: liuyao-coin-flip calc(var(--dur) * 3) var(--ease);
+}
+.liuyao-coin[data-face="back"] {
+  color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+}
+.liuyao-coin[data-face="none"] {
+  border: var(--border-dashed);
+  color: var(--color-faint);
+}
+.liuyao__toss-btn {
+  margin-top: 0;
+}
+.liuyao__toss-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.liuyao__progress {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+.liuyao__readout {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--color-ink);
+}
+/* 原文「再祝」那一节的对应提示：内卦成、续掷外卦 */
+.liuyao__transition {
+  margin: 0;
+  max-width: var(--measure);
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+}
+.liuyao__toss-hint {
+  margin: 0;
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  color: var(--color-faint);
+}
+
+/* ── 卦象图 ──────────────────────────────────────────── */
+.gua-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+}
+.gua-chart__caption {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+  text-align: left;
+}
+.gua-chart__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: var(--border-dashed);
+  border-radius: var(--radius-sm);
+}
+.gua-chart__group-label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-normal);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-faint);
+}
+.gua-chart__trigram {
+  font-family: var(--font-display);
+  letter-spacing: var(--ls-title);
+  color: var(--color-muted);
+}
+.gua-chart__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* 一行 = 动爻标记 + 爻线 + 文字读法。文字是**可见**文字，不是 aria-label：
+   读屏念得出「初爻 · 单（少阳）· 静」，看得见的人也照样读得到（PRD §13 无障碍）。 */
+.gua-chart__row {
+  display: grid;
+  grid-template-columns: var(--space-4) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+.gua-chart__mark {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--color-gold);
+}
+.gua-chart__line {
+  display: flex;
+  gap: var(--space-3);
+  width: 100%;
+}
+/* 阳一段、阴两段；未掷画虚线占位，让人一开始就看出要掷六次 */
+.gua-chart__seg {
+  flex: 1;
+  height: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-ink);
+}
+.gua-chart__seg--pending {
+  background: transparent;
+  border: var(--border-dashed);
+}
+/* 动爻整行提亮 —— 但「动」这件事同时由符号（○ / ×）与「动」字表达，不是只靠颜色 */
+.gua-chart__row[data-moving="true"] .gua-chart__seg {
+  background: var(--color-gold);
+}
+.gua-chart__state {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-muted);
+}
+.gua-chart__row[data-moving="true"] .gua-chart__state {
+  color: var(--color-gold-hi);
+}
+
+/* ── 结果区 ──────────────────────────────────────────── */
+.liuyao__result,
+.liuyao__review,
+.liuyao-reading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.liuyao-reading__topic-name {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-title);
+  color: var(--color-gold);
+}
+
+/* 本卦 / 之卦并排；只有本卦时独占一行（无动爻不出之卦，PRD §5.4） */
+.liuyao-reading__guas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.liuyao-gua {
+  flex: 1 1 var(--space-10);
+  min-width: 0;
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.liuyao-gua__label {
+  margin: 0;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+}
+.liuyao-gua__symbol {
+  margin: var(--space-2) 0;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  color: var(--color-gold);
+  text-shadow: var(--glow-gold);
+}
+.liuyao-gua__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-title);
+  color: var(--color-gold);
+}
+.liuyao-gua__meta {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-label);
+  color: var(--color-muted);
+}
+.liuyao-gua__code {
+  font-family: var(--font-mono);
+  letter-spacing: var(--ls-label);
+}
+
+/* 引用层（PRD §8.1）：原文逐字照登，配语境框与出处署名。
+   **整块换底** —— 编写层用 .panel 的 --color-surface，引用层压到 --color-bg-2，
+   两类块扫一眼就分得开，不必先读标题（PRD §8「双层分离」不能只靠文字标题撑着）。
+   三层深浅：编写层 surface ＞ 引用层 bg-2 ＞ 引文 bg，语境框反弹回 surface 以求醒目。 */
+.liuyao-quote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-bg-2);
+}
+/* 语境框：**显著的可见文字块**，不是小字脚注、不折叠（PRD §9.2-2）。
+   字号与正文同档、左侧起一道金边，与它下面的原文明显分层。 */
+.liuyao-context {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border);
+  border-left: var(--space-1) solid var(--color-gold-dim);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-ink);
+}
+.liuyao-quote__label {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-normal);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+}
+.liuyao-quote__text {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--color-ink);
+}
+.liuyao-quote__pos {
+  margin-right: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--color-gold-dim);
+}
+.liuyao-cite {
+  margin: 0;
+  font-size: var(--fs-label);
+  color: var(--color-faint);
+}
+
+/* 编写层（PRD §8.2）：与引用层**物理分区块**，区块标题是可见文字，不靠样式深浅区分 */
+.liuyao-written {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.liuyao-written__label {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-title);
+  color: var(--color-gold-dim);
+}
+.liuyao-written__text {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--color-ink);
+}
+.liuyao-written__closing {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+
+/* ── 操作区 / 二次确认（页面内组件，**不用浏览器 confirm**，PRD §13）── */
+.liuyao__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.liuyao__actions .cta,
+.liuyao__actions .btn-ghost {
+  margin-top: 0;
+}
+.liuyao__signin {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.liuyao__confirm {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+.liuyao__confirm p {
+  margin: 0 0 var(--space-4);
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+}
+.liuyao__confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* ── 卦例列表（登录用户）───────────────────────────────── */
+.liuyao__record-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+}
+.liuyao__record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-2);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+}
+.liuyao__record-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-title);
+  color: var(--color-gold);
+}
+.liuyao__record-changed {
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+.liuyao__record-meta {
+  margin: 0;
+  font-size: var(--fs-label);
+  color: var(--color-muted);
+}
+.liuyao__record-actions {
+  display: flex;
+  gap: var(--space-4);
+}
+
+/* 铜钱翻动：只是装饰，落定后的钱面由文字承载 */
+@keyframes liuyao-coin-flip {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(720deg);
+  }
+}
+
+@media (max-width: 720px) {
+  /* 窄屏本卦 / 之卦纵向堆叠，卦象图不压扁 */
+  .liuyao-gua {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .liuyao__toss-btn,
+  .liuyao__actions .cta,
+  .liuyao__actions .btn-ghost {
+    align-self: stretch;
+  }
+  /* 爻线与文字读法在窄屏改上下排，文字不被挤成一列 */
+  .gua-chart__row {
+    grid-template-columns: var(--space-4) minmax(0, 1fr);
+  }
+  .gua-chart__state {
+    grid-column: 2;
+  }
+}
+/* 翻动动画不得延迟内容可读：reduced-motion 下直接落定，钱面文字照常可见（设计宪法 §4-4） */
+@media (prefers-reduced-motion: reduce) {
+  .liuyao-coin {
+    animation: none;
+  }
+}
+
+/* 「我的」页面两类记录分区（六爻 PRD §23-Q1 选 A）：只管分区间距，
+   区内二十八宿那一块沿用 .history 既有样式，一个字没动 */
+.history__section {
+  margin-top: var(--space-6);
+}

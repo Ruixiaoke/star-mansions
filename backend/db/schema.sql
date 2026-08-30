@@ -26,3 +26,19 @@ create index if not exists readings_user_id_idx on public.readings (user_id);
 -- 关闭对外直连：启用 RLS 但不建公开策略（service key 绕过 RLS，后端照常工作）
 alter table public.users    enable row level security;
 alter table public.readings enable row level security;
+
+-- 卦例（六爻 PRD §11/§12）—— 纯增量表，不动上面 users / readings 两张表的任何一列。
+-- readings 的 benming / solar_date 是二十八宿专用硬列，塞不进卦象，故另起一表。
+create table if not exists public.divinations (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    text not null references public.users(id) on delete cascade,
+  kind       text not null,               -- 本期恒为 'liuyao'（预留：将来别的玩法复用本表）
+  topic      text not null,               -- 所问事项（下拉框枚举值，非自由文本；PRD §14 隐私设计）
+  code       text not null,               -- 卦码，六个爻数，如 '987678'
+  payload    jsonb not null,              -- 卦的完整快照
+  created_at timestamptz not null default now()
+);
+
+create index if not exists divinations_user_id_idx on public.divinations (user_id);
+
+alter table public.divinations enable row level security;
