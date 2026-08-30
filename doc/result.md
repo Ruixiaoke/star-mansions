@@ -35,7 +35,7 @@
 | M1 | API 契约 §4 | **done** | dev-backend |
 | M2 | 建表 SQL | **done** | dev-backend |
 | M3 | 署名声明 | **done** | dev-data |
-| M4 | PR（套模板） | 待办 | 编排者 |
+| M4 | PR（套模板） | **done** | 编排者 |
 | V1 | 引擎单测 | **done** | test-frontend |
 | V2 | 内容红线扫描 | **done** | test-frontend |
 | V3 | 后端单测 | **done** | test-backend |
@@ -773,3 +773,38 @@
 | 过度承诺扫描 | ✅ 0 命中 |
 
 **仍为 needs-human 的三项**：D3（64 段白话待人工签字，`GUA_READINGS_SIGNOFF=false`）、O1（Rick 在 Supabase 跑建表，顺序不可反）、以及 §14 已知鉴权限制（Rick 已拍板接受并已如实告知）。
+
+### M4 · PR 已开并转正式
+- **状态**：done
+- **证据**：
+  ```
+  PR #18 | draft=false | state=OPEN | reviewers: Ruixiaoke
+  https://github.com/Ruixiaoke/star-mansions/pull/18
+
+  CI：verify pass 30s  https://github.com/Ruixiaoke/star-mansions/actions/runs/33314055806
+      Vercel pass（Deployment has completed）
+      Vercel Preview Comments pass
+  Checklist 勾选 12 项（9 条 checklist + 3 条 Type）
+  commit 4c53270：33 files changed, 10052 insertions(+), 8 deletions(-)
+  ```
+- **PR 正文原样并入了「🔴 已知限制与未验证项（请勿跳过）」全节**，未删减未美化：token 可推导的完整复现命令、双验只跑成一半、五条未跑过的、四条需人眼看的、一条只做过一次性核对的。
+- **未合并**（`CLAUDE.md §5` 不自合并 = 合并即触发部署），合并权在 Rick。
+
+---
+
+# 交付总结
+
+| # | 状态 | 数 |
+|---|---|---|
+| **done** | 21 | P1 P2 P3 C1 C2 C3 C4 C5 C6 D1 D2 D4 T1 M1 M2 M3 M4 V1 V2 V3 V4 |
+| **needs-human** | 2 | **D3**（64 段白话待人工签字，`GUA_READINGS_SIGNOFF=false`）· **O1**（Rick 在 Supabase 跑 `schema.sql` 建表，顺序不可反） |
+| **skipped** | 0 | —— |
+
+**门禁**：typecheck ✅ / build ✅ / **543 测试全绿**（后端 52 + 前端 491）/ Vercel emit CommonJS ✅ / CI 全绿 ✅
+**边界**：`tokens.css` 零改动 · 新增 npm 依赖零 · 现有三端点行为零变化
+
+**agent team 编队**：11 个 agent（2 research / 5 dev / 3 test / 1 codex-test），按 `CLAUDE.md §9` 并行分轨、文件领地互不重叠。
+
+**agent 三次纠正编排者**：① dev-page 顶回「Q1 已拍板」的漏看；② dev-data 用门禁反证纠正卦序 28/62 写错；③ dev-content 用数量级证伪编排者的根因订正。
+
+taskResult=Done
