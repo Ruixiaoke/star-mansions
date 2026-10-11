@@ -1,4 +1,5 @@
 # 二十八星宿测算 Web App
+https://ruixiaoke.github.io/star-mansions/
 
 输入公历/农历生日 → 按《宿曜经》本命宿法（农历生日）算本命宿 → 展示形象、星图与七维解读；带邮箱登录。
 
