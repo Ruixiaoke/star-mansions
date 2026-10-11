@@ -1,0 +1,19 @@
+{
+  "name": "jr-l15-local",
+  "owner": {
+    "name": "JR Academy"
+  },
+  "metadata": {
+    "description": "第十五节课的本地市场。拉不到线上市场时用它顶替，流程完全一样。",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "handover-demo",
+      "description": "样例包：一个技能 + 一个钩子，用来演示怎么把东西交出去。",
+      "version": "0.1.0",
+      "author": { "name": "JR Academy" },
+      "source": "./plugins/handover-demo"
+    }
+  ]
+}

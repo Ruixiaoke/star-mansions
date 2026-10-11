@@ -1,0 +1,8 @@
+{
+  "name": "handover-demo",
+  "version": "0.1.0",
+  "description": "第十五节课的样例包：一个技能 + 一个钩子，用来演示怎么把东西交出去。",
+  "author": {
+    "name": "JR Academy"
+  }
+}

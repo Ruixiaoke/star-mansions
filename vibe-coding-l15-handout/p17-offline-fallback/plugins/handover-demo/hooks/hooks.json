@@ -1,0 +1,16 @@
+{
+  "description": "样例钩子：每次会话开始时留下一条痕迹，用来证明这个包真的在工作。",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/leave-a-trace.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

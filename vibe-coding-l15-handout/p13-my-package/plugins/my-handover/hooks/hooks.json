@@ -1,0 +1,16 @@
+{
+  "description": "占位钩子。把它换成你第十二节课写的那个。",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/leave-a-trace.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
