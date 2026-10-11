@@ -1,0 +1,17 @@
+{
+  "name": "my-package",
+  "owner": { "name": "换成你的名字" },
+  "metadata": {
+    "description": "我自己的包。",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "my-handover",
+      "description": "我的技能和钩子。",
+      "version": "0.1.0",
+      "author": { "name": "换成你的名字" },
+      "source": "./plugins/my-handover"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# 课上建的隔离沙箱（clean-profile.sh new 会在家目录下建，不在本仓库内，
+# 这里列出来只是提醒：沙箱不要提交）
+.claude-l15-sandbox/
+
+# 学员自己的产物，各人不同，不进仓库
+*.local
